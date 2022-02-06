@@ -6,62 +6,22 @@ public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         String str = scan.next();
-        char n = 'n';
-        char o = 'o';
-        char x = 'x';
-
-        int maxccount = 0;
-        char maxcountChar = n;
-        int ccount = 0;
-        char countChar = n;
-        for (char ch: str.toCharArray()) {
-
-            if (o == ch) {
-                if (o != countChar) {
-                    countChar = o;
-                    ccount = 0;
-                }
-                ccount++;
-
-                if (ccount > maxccount) {
-                    maxccount = ccount;
-                    maxcountChar = countChar;
-                }
-
-                continue;
-            }
-
-            if (x == ch) {
-                if (x != countChar) {
-                    countChar = x;
-                    ccount = 0;
-                }
-                ccount++;
-
-                if (ccount > maxccount) {
-                    maxccount = ccount;
-                    maxcountChar = countChar;
-                }
-
-                continue;
-            }
-
-            countChar = n;
-        }
-
         scan.close();
 
-        if (maxccount > 2) {
-            if (o == maxcountChar) {
-                System.out.println(o);
-                return;
-            }
-
-            System.out.println(x);
-            return;
+        char[] chars = str.toCharArray();
+        String result = "draw";
+        if (chars[0] == chars[1] && chars[1] == chars[2]) {
+            result = chars[0] == 'o' ? "o" : "x";
         }
 
-        System.out.println("draw");
-        scan.close();
+        if (chars[1] == chars[2] && chars[2] == chars[3]) {
+            result = chars[1] == 'o' ? "o" : "x";
+        }
+
+        if (chars[2] == chars[3] && chars[3] == chars[4]) {
+            result = chars[2] == 'o' ? "o" : "x";
+        }
+
+        System.out.println(result);
     }
 }
