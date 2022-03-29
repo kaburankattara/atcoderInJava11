@@ -9,6 +9,8 @@ import static java.lang.Integer.parseInt;
 public class Main {
 
     /**
+     * F - DoubleCamelCase Sort
+     *
      * 問題文
      * 文字列 S が与えられる。これは、1 つ以上の単語を (間に空白などを挟まずに) 連結したものである。ここで、各単語は 2 文字以上であり、最初の文字と最後の文字のみが英大文字、それ以外の文字は全て英小文字である。
      *
