@@ -142,6 +142,16 @@ public class Main {
         public void use(String actionStr) {
             String[] action = actionStr.split(" ");
 
+//            System.out.println("");
+//            System.out.println("action：" + actionStr);
+//            System.out.println("全商品の最小在庫：" + minZaikosuForAll);
+//            System.out.println("セット商品の最小在庫：" + minZaikosuForSet);
+//            int idx = 1;
+//            for (Shohin shohin : shohinList) {
+//                System.out.println("商品" + idx + "の在庫：" + shohin.zaiko);
+//                idx++;
+//            }
+
             if (action.length == 3) {
                 simpleUse(toInt(action[1])-1, toInt(action[2]));
                 return;
@@ -163,7 +173,10 @@ public class Main {
             if (!shohin.hasZaiko(use)) {
                 return;
             }
+
             shohin.use(use);
+            setMinZaikosuForAll(shohin);
+            setMinZaikosuForSet(idx, shohin);
         }
 
         public void setUse(int use) {
@@ -174,9 +187,8 @@ public class Main {
 
             for (Shohin shohin : shohinListForSet){
                 shohin.use(use);
-                if (shohin.zaiko < minZaikosuForSet) {
-                    minZaikosuForSet = shohin.zaiko;
-                }
+                setMinZaikosuForAll(shohin);
+                setMinZaikosuForSet(shohin);
             }
         }
 
@@ -188,9 +200,7 @@ public class Main {
 
             for (Shohin shohin : shohinList) {
                 shohin.use(use);
-                if (shohin.zaiko < minZaikosuForAll) {
-                    minZaikosuForAll = shohin.zaiko;
-                }
+                setMinZaikosuForAll(shohin);
             }
         }
 
@@ -200,6 +210,24 @@ public class Main {
                 useSum = useSum + (shohin.syokaiZaiko - shohin.zaiko);
             }
             System.out.println(useSum);
+        }
+
+        void setMinZaikosuForAll(Shohin shohin) {
+            if (shohin.zaiko < minZaikosuForAll) {
+                minZaikosuForAll = shohin.zaiko;
+            }
+        }
+
+        void setMinZaikosuForSet(int idx, Shohin shohin) {
+            if (idx % 2 == 0 ) {
+                setMinZaikosuForSet(shohin);
+            }
+        }
+
+        void setMinZaikosuForSet(Shohin shohin) {
+            if (shohin.zaiko < minZaikosuForSet) {
+                minZaikosuForSet = shohin.zaiko;
+            }
         }
     }
 }
