@@ -91,10 +91,12 @@ public class Main {
     public class Shohin {
         public int zaiko = 0;
         public int syokaiZaiko = 0;
+        public boolean isKisu;
 
-        public Shohin(int zaiko) {
+        public Shohin(final int zaiko, final boolean isKisu) {
             this.zaiko = zaiko;
             this.syokaiZaiko = zaiko;
+            this.isKisu = isKisu;
         }
 
         public void use(int n) {
@@ -121,7 +123,7 @@ public class Main {
             String[] shohinList = scan.nextLine().split(" ");
             for (String shohinZaiko : shohinList){
                 int zaiko = toInt(shohinZaiko);
-                Shohin shohin = new Shohin(zaiko);
+                Shohin shohin = new Shohin(zaiko, isKisu);
 
                 this.shohinList.add(shohin);
                 if (isFirst || zaiko < minZaikosuForAll) {
@@ -220,7 +222,7 @@ public class Main {
         }
 
         void setMinZaikosuForSet(int idx, Shohin shohin) {
-            if (idx % 2 == 0 ) {
+            if (shohin.isKisu) {
                 setMinZaikosuForSet(shohin);
             }
         }
