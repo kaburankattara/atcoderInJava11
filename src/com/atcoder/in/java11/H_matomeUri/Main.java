@@ -2,8 +2,6 @@ package com.atcoder.in.java11.H_matomeUri;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
@@ -107,53 +105,55 @@ public class Main {
             return n <= zaiko;
         }
     }
-    public class Shohins {
-        public List<Shohin> shohinList = new ArrayList<>();
-        public List<Shohin> shohinListForSet = new ArrayList<>();
 
-        public int minZaikosuForSet = -1;
-        public int minZaikosuForAll = -1;
+    public class Shohins {
+        public Shohin[] shohinList;
+        public Shohin[] shohinListForSet;
+
+        public int minZaikosuForSet;
+        public int minZaikosuForAll;
 
         public Shohins(final Scanner scan) {
+            int shohinCount = toInt(scan.nextLine());
+            int kisuShohinCount = shohinCount % 2 == 0 ? shohinCount / 2 : shohinCount / 2 + 1;
 
-            boolean isKisu = true;
-            boolean isFirst = true;
+            String[] shohinList2 = scan.nextLine().split(" ");
 
-            int shohinCount = parseInt(scan.nextLine());
-            String[] shohinList = scan.nextLine().split(" ");
-            for (String shohinZaiko : shohinList){
-                int zaiko = toInt(shohinZaiko);
+            shohinList = new Shohin[shohinCount];
+            shohinListForSet = new Shohin[kisuShohinCount];
+            final int zaiko1 = toInt(shohinList2[0]);
+            Shohin shohin1 = new Shohin(zaiko1, true);
+            this.shohinList[0] = shohin1;
+            minZaikosuForAll = zaiko1;
+            shohinListForSet[0] = shohin1;
+            minZaikosuForSet = zaiko1;
+
+            boolean isKisu = false;
+            int idxKisu = 1;
+            for (int idx = 1; idx < shohinCount; idx++) {
+                final int zaiko = toInt(shohinList2[idx]);
                 Shohin shohin = new Shohin(zaiko, isKisu);
+                this.shohinList[idx] = shohin;
 
-                this.shohinList.add(shohin);
-                if (isFirst || zaiko < minZaikosuForAll) {
+                if (zaiko < minZaikosuForAll) {
                     minZaikosuForAll = zaiko;
                 }
 
                 if (isKisu) {
-                    shohinListForSet.add(shohin);
-                    if (isFirst || zaiko < minZaikosuForSet) {
+                    shohinListForSet[idxKisu] = shohin;
+                    if (zaiko < minZaikosuForSet) {
                         minZaikosuForSet = zaiko;
                     }
+                    idxKisu++;
                 }
                 isKisu = !isKisu;
-                isFirst = false;
             }
+
         }
 
         public void use(String actionStr) {
             String[] actionItems = actionStr.split(" ");
             char action = actionItems[0].charAt(0);
-
-//            System.out.println("");
-//            System.out.println("action：" + actionStr);
-//            System.out.println("全商品の最小在庫：" + minZaikosuForAll);
-//            System.out.println("セット商品の最小在庫：" + minZaikosuForSet);
-//            int idx = 1;
-//            for (Shohin shohin : shohinList) {
-//                System.out.println("商品" + idx + "の在庫：" + shohin.zaiko);
-//                idx++;
-//            }
 
             if (action == '1') {
                 simpleUse(toInt(actionItems[1])-1, toInt(actionItems[2]));
@@ -172,7 +172,7 @@ public class Main {
         }
 
         public void simpleUse(int idx, int use) {
-            Shohin shohin = this.shohinList.get(idx);
+            Shohin shohin = this.shohinList[idx];
             if (!shohin.hasZaiko(use)) {
                 return;
             }
