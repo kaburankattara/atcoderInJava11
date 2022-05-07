@@ -2,7 +2,9 @@ package com.atcoder.in.java11.H_matomeUri;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
 
@@ -66,14 +68,10 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
 //        Scanner scan = new Scanner(System.in);
         Scanner scan = new Scanner(new File("src/com/atcoder/in/java11/H_matomeUri/input.txt"));
-
-        int shohinCount = parseInt(scan.nextLine());
-        String[] shohinList = scan.nextLine().split(" ");
-        int actionCount = parseInt(scan.nextLine());
-
         Main main = new Main();
 
-        Shohins shohins = main.getShohins(shohinList);
+        Shohins shohins = main.getShohins(scan);
+        int actionCount = parseInt(scan.nextLine());
         while (scan.hasNext()) {
             shohins.use(scan.nextLine());
         }
@@ -85,8 +83,8 @@ public class Main {
         return Integer.parseInt(a);
     }
 
-    public Shohins getShohins(String[] shohinList) {
-        return new Shohins(shohinList);
+    public Shohins getShohins(final Scanner scan) {
+        return new Shohins(scan);
     }
 
 
@@ -114,11 +112,13 @@ public class Main {
         public int minZaikosuForSet = -1;
         public int minZaikosuForAll = -1;
 
-        public Shohins(String[] shohinList) {
+        public Shohins(final Scanner scan) {
 
             boolean isKisu = true;
             boolean isFirst = true;
 
+            int shohinCount = parseInt(scan.nextLine());
+            String[] shohinList = scan.nextLine().split(" ");
             for (String shohinZaiko : shohinList){
                 int zaiko = toInt(shohinZaiko);
                 Shohin shohin = new Shohin(zaiko);
@@ -140,7 +140,8 @@ public class Main {
         }
 
         public void use(String actionStr) {
-            String[] action = actionStr.split(" ");
+            String[] actionItems = actionStr.split(" ");
+            char action = actionItems[0].charAt(0);
 
 //            System.out.println("");
 //            System.out.println("action：" + actionStr);
@@ -152,18 +153,18 @@ public class Main {
 //                idx++;
 //            }
 
-            if (action.length == 3) {
-                simpleUse(toInt(action[1])-1, toInt(action[2]));
+            if (action == '1') {
+                simpleUse(toInt(actionItems[1])-1, toInt(actionItems[2]));
                 return;
             }
 
-            if ("2".equals(action[0])) {
-                setUse(toInt(action[1]));
+            if (action == '2') {
+                setUse(toInt(actionItems[1]));
                 return;
             }
 
-            if ("3".equals(action[0])) {
-                allUse(toInt(action[1]));
+            if (action == '3') {
+                allUse(toInt(actionItems[1]));
                 return;
             }
         }
