@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import static java.lang.Integer.parseInt;
-
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -14,15 +12,15 @@ public class Main {
         Main main = new Main();
 
         Shohins shohins = main.getShohins(scan);
-        int actionCount = parseInt(scan.nextLine());
+        int actionCount = toInt(scan.next());
         for (int i = 0; i < actionCount; i++) {
-            shohins.use(scan.nextLine());
+            shohins.use(scan);
         }
 
         shohins.print();
     }
 
-    public int toInt(final String a) {
+    public static int toInt(final String a) {
         return Integer.parseInt(a);
     }
 
@@ -67,14 +65,12 @@ public class Main {
         public int useAll = 0;
 
         public Shohins(final Scanner scan) {
-            int shohinCount = toInt(scan.nextLine());
+            int shohinCount = toInt(scan.next());
             int kisuShohinCount = shohinCount % 2 == 0 ? shohinCount / 2 : shohinCount / 2 + 1;
-
-            String[] shohinList2 = scan.nextLine().split(" ");
 
             shohinList = new Shohin[shohinCount];
             shohinListForSet = new Shohin[kisuShohinCount];
-            final int zaiko1 = toInt(shohinList2[0]);
+            final int zaiko1 = toInt(scan.next());
             Shohin shohin1 = new Shohin(zaiko1, true);
             this.shohinList[0] = shohin1;
             minAllZaiko = zaiko1;
@@ -85,7 +81,7 @@ public class Main {
             int idxKisu = 1;
             for (int idx = 1; idx < shohinCount; idx++) {
 
-                final int zaiko = toInt(shohinList2[idx]);
+                final int zaiko = toInt(scan.next());
                 Shohin shohin = new Shohin(zaiko, isKisu);
                 this.shohinList[idx] = shohin;
 
@@ -105,13 +101,12 @@ public class Main {
 
         }
 
-        public void use(final String actionStr) {
-            final String[] actionItems = actionStr.split(" ");
-            final char action = actionItems[0].charAt(0);
-            final int arg1 = toInt(actionItems[1]);
+        public void use(final Scanner scan) {
+            final char action = scan.next().charAt(0);
+            final int arg1 = toInt(scan.next());
 
             if (action == '1') {
-                simpleUse(arg1 - 1, toInt(actionItems[2]));
+                simpleUse(arg1 - 1, toInt(scan.next()));
                 return;
             }
 
@@ -140,10 +135,7 @@ public class Main {
                 minAllZaiko = zaiko;
             }
 
-            if (!shohin.isKisu) {
-                return;
-            }
-            if (zaiko < minSetZaiko) {
+            if (shohin.isKisu && zaiko < minSetZaiko) {
                 minSetZaiko = zaiko;
             }
         }
