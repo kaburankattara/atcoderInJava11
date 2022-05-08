@@ -49,13 +49,11 @@ public class Main {
             return shokaiZaiko - getUse(useSet, useAll);
         }
 
-        public int getUse(final int useSetArg, final int useAll) {
-            int useSet = isKisu ? useSetArg : 0;
-            return simpleUse + useSet + useAll;
-        }
-
-        public boolean hasZaiko(final int use, final int useSet, final int useAll) {
-            return use <= getZaiko(useSet, useAll);
+        public int getUse(final int useSet, final int useAll) {
+            if (isKisu) {
+                return simpleUse + useSet + useAll;
+            }
+            return simpleUse + useAll;
         }
     }
 
@@ -110,32 +108,44 @@ public class Main {
         public void use(final String actionStr) {
             final String[] actionItems = actionStr.split(" ");
             final char action = actionItems[0].charAt(0);
+            final int arg1 = toInt(actionItems[1]);
 
             if (action == '1') {
-                simpleUse(toInt(actionItems[1])-1, toInt(actionItems[2]));
+                simpleUse(arg1 - 1, toInt(actionItems[2]));
                 return;
             }
 
             if (action == '2') {
-                setUse(toInt(actionItems[1]));
+                setUse(arg1);
                 return;
             }
 
             if (action == '3') {
-                allUse(toInt(actionItems[1]));
+                allUse(arg1);
                 return;
             }
         }
 
         public void simpleUse(final int idx, final int use) {
             Shohin shohin = this.shohinList[idx];
-            if (!shohin.hasZaiko(use, useSet, useAll)) {
+            int zaiko = shohin.getZaiko(useSet, useAll);
+            if (zaiko < use) {
                 return;
             }
 
             shohin.simpleUse(use);
-            setMinZaikosuForAll(shohin);
-            setMinZaikosuForSet(idx, shohin);
+            zaiko = zaiko - use;
+
+            if (zaiko < minAllZaiko) {
+                minAllZaiko = zaiko;
+            }
+
+            if (!shohin.isKisu) {
+                return;
+            }
+            if (zaiko < minSetZaiko) {
+                minSetZaiko = zaiko;
+            }
         }
 
         public void setUse(final int use) {
@@ -143,6 +153,7 @@ public class Main {
             if (minSetZaiko < use) {
                 return;
             }
+
             minSetZaiko = minSetZaiko - use;
             useSet = useSet + use;
 
@@ -163,32 +174,12 @@ public class Main {
             minSetZaiko = minSetZaiko - use;
         }
 
-        void print() {
+        public void print() {
             int useSum = 0;
             for (Shohin shohin : shohinList) {
                 useSum = useSum + shohin.getUse(useSet, useAll);
             }
             System.out.println(useSum);
-        }
-
-        void setMinZaikosuForAll(final Shohin shohin) {
-            final int zaiko = shohin.getZaiko(useSet, useAll);
-            if (zaiko < minAllZaiko) {
-                minAllZaiko = zaiko;
-            }
-        }
-
-        void setMinZaikosuForSet(final int idx, final Shohin shohin) {
-            if (shohin.isKisu) {
-                setMinZaikosuForSet(shohin);
-            }
-        }
-
-        void setMinZaikosuForSet(final Shohin shohin) {
-            final int zaiko = shohin.getZaiko(useSet, useAll);
-            if (zaiko < minSetZaiko) {
-                minSetZaiko = zaiko;
-            }
         }
     }
 }
