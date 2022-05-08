@@ -8,61 +8,6 @@ import static java.lang.Integer.parseInt;
 
 public class Main {
 
-    /**
-     * H - まとめ売り  /
-     * 実行時間制限: 4 sec / メモリ制限: 1024 MB
-     *
-     * 注意
-     * この問題に対する言及は、2019年12月29日 05:00 JST まで禁止されています。言及がなされた場合、賠償が請求される可能性があります。
-     *
-     * 試験後に総合得点や認定級を公表するのは構いませんが、どの問題が解けたかなどの情報は発信しないようにお願いします。
-     *
-     * 問題文
-     * あなたは、トレーディングカードを販売しようとしている。 それぞれのカードの種類には 1,...,N の番号がついている。 はじめ、カード i(1≦i≦N) の在庫数は C
-     * i
-     * ​
-     *   枚である。
-     *
-     * あなたは、以下のような Q 件のクエリ S
-     * 1
-     * ​
-     *  ,…,S
-     * Q
-     * ​
-     *   を順番に処理しなければならない。
-     *
-     * 単品販売：カード x を a 枚販売する。ただし、在庫が足りない場合は何もしない。1 x a という形式で与えられる。
-     * セット販売：番号が奇数であるカードをそれぞれ a 枚ずつ販売する。ただし、一種類でも在庫が足りない場合は何もしない。2 a という形式で与えられる。
-     * 全種類販売：カードを全種類 a 枚ずつ販売する。ただし、一種類でも在庫が足りない場合は何もしない。3 a という形式で与えられる。
-     * 最終的に販売するカードの合計枚数を出力せよ。
-     *
-     * 制約
-     * 1≦N≦200,000
-     * 1≦C
-     * i
-     * ​
-     *  ≦10
-     * 9
-     *
-     * 1≦Q≦200,000
-     * S
-     * i
-     * ​
-     *   は以下のいずれかの形式の文字列である。
-     * 1 x a (1≦x≦N かつ 1≦a≦10
-     * 9
-     *  )
-     * 2 a (1≦a≦10
-     * 9
-     *  )
-     * 3 a (1≦a≦10
-     * 9
-     *  )
-     * 入力で与えられる数は全て整数である。
-     *
-     * @param args
-     * @throws FileNotFoundException
-     */
     public static void main(String[] args) throws FileNotFoundException {
 //        Scanner scan = new Scanner(System.in);
         Scanner scan = new Scanner(new File("src/com/atcoder/in/java11/H_matomeUri/input.txt"));
@@ -70,14 +15,14 @@ public class Main {
 
         Shohins shohins = main.getShohins(scan);
         int actionCount = parseInt(scan.nextLine());
-        while (scan.hasNext()) {
+        for (int i = 0; i < actionCount; i++) {
             shohins.use(scan.nextLine());
         }
 
         shohins.print();
     }
 
-    public int toInt(String a) {
+    public int toInt(final String a) {
         return Integer.parseInt(a);
     }
 
@@ -85,10 +30,9 @@ public class Main {
         return new Shohins(scan);
     }
 
-
     public class Shohin {
-        public int zaiko = 0;
-        public int syokaiZaiko = 0;
+        public int zaiko;
+        public int syokaiZaiko;
         public boolean isKisu;
 
         public Shohin(final int zaiko, final boolean isKisu) {
@@ -97,11 +41,11 @@ public class Main {
             this.isKisu = isKisu;
         }
 
-        public void use(int n) {
+        public void use(final int n) {
             zaiko = zaiko - n;
         }
 
-        public boolean hasZaiko(int n) {
+        public boolean hasZaiko(final int n) {
             return n <= zaiko;
         }
     }
@@ -131,6 +75,7 @@ public class Main {
             boolean isKisu = false;
             int idxKisu = 1;
             for (int idx = 1; idx < shohinCount; idx++) {
+
                 final int zaiko = toInt(shohinList2[idx]);
                 Shohin shohin = new Shohin(zaiko, isKisu);
                 this.shohinList[idx] = shohin;
@@ -151,9 +96,9 @@ public class Main {
 
         }
 
-        public void use(String actionStr) {
-            String[] actionItems = actionStr.split(" ");
-            char action = actionItems[0].charAt(0);
+        public void use(final String actionStr) {
+            final String[] actionItems = actionStr.split(" ");
+            final char action = actionItems[0].charAt(0);
 
             if (action == '1') {
                 simpleUse(toInt(actionItems[1])-1, toInt(actionItems[2]));
@@ -171,7 +116,7 @@ public class Main {
             }
         }
 
-        public void simpleUse(int idx, int use) {
+        public void simpleUse(final int idx, final int use) {
             Shohin shohin = this.shohinList[idx];
             if (!shohin.hasZaiko(use)) {
                 return;
@@ -182,7 +127,7 @@ public class Main {
             setMinZaikosuForSet(idx, shohin);
         }
 
-        public void setUse(int use) {
+        public void setUse(final int use) {
 
             if (minZaikosuForSet < use) {
                 return;
@@ -195,7 +140,7 @@ public class Main {
             }
         }
 
-        public void allUse(int use) {
+        public void allUse(final int use) {
 
             if (minZaikosuForAll < use) {
                 return;
@@ -215,19 +160,19 @@ public class Main {
             System.out.println(useSum);
         }
 
-        void setMinZaikosuForAll(Shohin shohin) {
+        void setMinZaikosuForAll(final Shohin shohin) {
             if (shohin.zaiko < minZaikosuForAll) {
                 minZaikosuForAll = shohin.zaiko;
             }
         }
 
-        void setMinZaikosuForSet(int idx, Shohin shohin) {
+        void setMinZaikosuForSet(final int idx, final Shohin shohin) {
             if (shohin.isKisu) {
                 setMinZaikosuForSet(shohin);
             }
         }
 
-        void setMinZaikosuForSet(Shohin shohin) {
+        void setMinZaikosuForSet(final Shohin shohin) {
             if (shohin.zaiko < minZaikosuForSet) {
                 minZaikosuForSet = shohin.zaiko;
             }
