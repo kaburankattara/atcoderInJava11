@@ -26,15 +26,11 @@ public class Main {
     public class Now extends Section {
         public int targetH;
         public int targetW;
-//        public int withoutH;
-//        public int withoutW;
 
         public Now(int h, int w, int targetH, int targetW) {
             super(true, h, w, 0);
             this.targetH = targetH;
             this.targetW = targetW;
-//            this.withoutH = h;
-//            this.withoutW = 0;
         }
 
         public int move(Section section) {
@@ -55,10 +51,6 @@ public class Main {
         public boolean isTargetNow() {
             return this.h == this.targetH && this.w == this.targetW;
         }
-
-//        public boolean isWithout(int h, int w) {
-//            return h == this.withoutH && w == this.withoutW;
-//        }
 
         public boolean isNeedTop() {
             return targetH < h;
@@ -194,9 +186,6 @@ public class Main {
                 int h = now.h - 1;
                 int w = now.w;
                 sectionList.add(getSection(h, w));
-//                if (!now.isWithout(h, w)) {
-//                    sectionList.add(getSection(h, w));
-//                }
             }
 
             // right
@@ -204,9 +193,6 @@ public class Main {
                 int h = now.h;
                 int w = now.w + 1;
                 sectionList.add(getSection(h, w));
-//                if (!now.isWithout(h, w)) {
-//                    sectionList.add(getSection(h, w));
-//                }
             }
 
             // bottom
@@ -214,9 +200,6 @@ public class Main {
                 int h = now.h + 1;
                 int w = now.w;
                 sectionList.add(getSection(h, w));
-//                if (!now.isWithout(h, w)) {
-//                    sectionList.add(getSection(h, w));
-//                }
             }
 
             // left
@@ -224,9 +207,6 @@ public class Main {
                 int h = now.h;
                 int w = now.w - 1;
                 sectionList.add(getSection(h, w));
-//                if (!now.isWithout(h, w)) {
-//                    sectionList.add(getSection(h, w));
-//                }
             }
 
             return new Sections(sectionList);
@@ -271,6 +251,4 @@ public class Main {
             return resultCost;
         }
     }
-
-
 }
