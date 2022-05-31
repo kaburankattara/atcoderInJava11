@@ -1,30 +1,29 @@
 package com.atcoder.in.java11.IsItANumber;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        Main main = new Main();
-//        Scanner scan = new Scanner(System.in);
-        Scanner scan = new Scanner(new File("src/com/atcoder/in/java11/IsItANumber/input4.txt"));
+        Scanner scan = new Scanner(System.in);
+//        Scanner scan = new Scanner(new File("src/com/atcoder/in/java11/IsItANumber/input2.txt"));
 
         String arg = scan.next();
-        boolean isOK = true;
-        for (char ch : arg.toCharArray()) {
-            if (!Character.isDigit(ch)) {
-                System.out.println("error");
-                isOK = false;
-                break;
-            }
+        Pattern p = Pattern.compile("^[0-9]+$");
+        Matcher m = p.matcher(arg);
+
+        if(m.find()){
+            int num = toInt(arg);
+            System.out.println(num * 2);
+            return;
         }
-        if (isOK) {
-            System.out.println(toInt(arg) * 2);
-        }
+        System.out.print("error");
     }
 
     public static int toInt(final String a) {
         return Integer.parseInt(a);
     }
+
 }
