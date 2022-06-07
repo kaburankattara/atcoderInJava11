@@ -50,7 +50,7 @@ public class Main {
                 int follower = toInt(scan.next());
                 int target = toInt(scan.next());
                 userList.get(follower).follow(userList.get(target));
-                userList.get(target).followerList.add(userList.get(follower));
+                userList.get(target).addFollower(userList.get(follower));
                 return;
             }
 
@@ -68,31 +68,29 @@ public class Main {
         }
 
         public void allFollowReturn(User targetUser) {
-            for (User follower : userList) {
+            for (User follower : targetUser.followerList) {
                 if (follower != null && follower.isFollow(targetUser)) {
                     targetUser.follow(follower);
-                    follower.followerList.add(targetUser);
+                    follower.addFollower(targetUser);
                 }
             }
         }
 
         public void followFollow(User targetUser) {
-            List<Integer> addingUserNoList = new ArrayList<>();
+            List<User> addingUserList = new ArrayList<>();
             for (User followUser : targetUser.followList) {
                 if (followUser == null) {
                     continue;
                 }
-                if (addingUserNoList.contains(followUser.userNo)) {
+                if (addingUserList.contains(followUser)) {
                     continue;
                 }
 
-                List<User> followerFollowList = followUser.followList;
-                for (User followerFollow : followerFollowList) {
-                    if (followerFollow != null) {
+                for (User followerFollow : followUser.followList) {
+                    if (followerFollow != null && !followerFollow.isEquals(targetUser)) {
                         targetUser.follow(followerFollow);
-                        followerFollow.followerList.add(targetUser);
-                        addingUserNoList.add(followerFollow.userNo);
-                        // TODO 自分自身は？
+                        followerFollow.addFollower(targetUser);
+                        addingUserList.add(followerFollow);
                     }
                 }
             }
@@ -130,6 +128,17 @@ public class Main {
 
         public boolean isFollow(User user) {
             return followList.get(user.userNo) != null;
+        }
+
+        public boolean isEquals(User user) {
+            return userNo == user.userNo;
+        }
+
+        public void addFollower(User user) {
+            if (followerList.contains(user))  {
+                return;
+            }
+            followerList.add(user);
         }
 
         public String printResult() {
