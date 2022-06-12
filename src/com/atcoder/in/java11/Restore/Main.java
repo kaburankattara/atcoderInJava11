@@ -8,19 +8,19 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-//       Scanner scan = new Scanner(System.in);
-       Scanner scan = new Scanner(new File("src/com/atcoder/in/java11/Restore/input1.txt"));
+//        Scanner scan = new Scanner(System.in);
+        Scanner scan = new Scanner(new File("src/main/java/com/atcoder/in/java11/Restore/input1.txt"));
         Main main = new Main();
 
-       int userCount = toInt(scan.next());
-       int actionCount = toInt(scan.next());
-       Users users = main.getUsers(userCount);
+        int userCount = toInt(scan.next());
+        int actionCount = toInt(scan.next());
+        Users users = main.getUsers(userCount);
 
-       for (int i = 0; i < actionCount; i++) {
-           users.execAction(scan);
-       }
+        for (int i = 0; i < actionCount; i++) {
+            users.execAction(scan);
+        }
 
-        users.printResult();
+        System.out.println(users.printResult());
     }
 
     public static int toInt(final String a) {
@@ -28,7 +28,7 @@ public class Main {
     }
 
     public Users getUsers(int userCount) {
-        return new Users(userCount + 1);
+        return new Users(userCount);
     }
 
     public class Users {
@@ -37,7 +37,7 @@ public class Main {
         public Users(int userCount) {
             userList = new ArrayList<>();
             userList.add(null);
-
+            userCount++;
             for (int i = 1; i < userCount; i++) {
                 userList.add(new User(i, userCount));
             }
@@ -47,10 +47,9 @@ public class Main {
             char action = scan.next().charAt(0);
 
             if (action == '1') {
-                int follower = toInt(scan.next());
-                int target = toInt(scan.next());
-                userList.get(follower).follow(userList.get(target));
-                userList.get(target).addFollower(userList.get(follower));
+                User follower = userList.get(toInt(scan.next()));
+                User target = userList.get(toInt(scan.next()));
+                follow(follower, target);
                 return;
             }
 
@@ -67,44 +66,63 @@ public class Main {
             }
         }
 
-        public void allFollowReturn(User targetUser) {
-            for (User follower : targetUser.followerList) {
-                if (follower != null && follower.isFollow(targetUser)) {
-                    targetUser.follow(follower);
-                    follower.addFollower(targetUser);
+        public void follow(User follower, User target) {
+            if (follower.isEquals(target)) {
+                return;
+            }
+            if (follower.isFollow(target)) {
+                return;
+            }
+            follower.follow(target);
+            target.addFollower(follower);
+        }
+
+        public void allFollowReturn(User target) {
+            List<User> addingUserList = new ArrayList<>();
+            for (User follower : target.followerList) {
+                if (follower == null) {
+                    continue;
                 }
+                if (addingUserList.contains(follower)) {
+                    continue;
+                }
+
+                follow(target, follower);
+                addingUserList.add(follower);
             }
         }
 
-        public void followFollow(User targetUser) {
+        public void followFollow(User target) {
             List<User> addingUserList = new ArrayList<>();
-            for (User followUser : targetUser.followList) {
+            for (User followUser : target.followList) {
                 if (followUser == null) {
                     continue;
                 }
-                if (addingUserList.contains(followUser)) {
-                    continue;
-                }
 
-                for (User followerFollow : followUser.followList) {
-                    if (followerFollow != null && !followerFollow.isEquals(targetUser)) {
-                        targetUser.follow(followerFollow);
-                        followerFollow.addFollower(targetUser);
-                        addingUserList.add(followerFollow);
+                for (User followFollow : followUser.followList) {
+                    if (followFollow == null || followFollow.isEquals(target)) {
+                        continue;
                     }
+                    addingUserList.add(followFollow);
                 }
+            }
+
+            for (User addingUser : addingUserList) {
+                follow(target, addingUser);
             }
         }
 
-        public void printResult() {
+        public String printResult() {
             boolean isFirst = true;
+            StringBuilder sb = new StringBuilder();
             for (User user : userList) {
                 if (isFirst) {
                     isFirst = false;
                     continue;
                 }
-                System.out.println(user.printResult());
+                sb.append(System.lineSeparator() + user.printResult());
             }
+            return sb.toString().substring(1);
         }
     }
 
@@ -116,18 +134,25 @@ public class Main {
         public User(int userNo, int userCount) {
             this.userNo = userNo;
             followList = new ArrayList<>(userCount);
-            followerList = new ArrayList<>(userCount);
+            followerList = new ArrayList<>();
             for (int i = 0; i < userCount; i++) {
                 followList.add(null);
             }
         }
 
         public void follow(User user) {
+            if (isFollow(user)) {
+                return;
+            }
             followList.set(user.userNo, user);
         }
 
         public boolean isFollow(User user) {
-            return followList.get(user.userNo) != null;
+            return followList.contains(user);
+        }
+
+        public boolean isFollower(User user) {
+            return followerList.contains(user);
         }
 
         public boolean isEquals(User user) {
@@ -135,7 +160,7 @@ public class Main {
         }
 
         public void addFollower(User user) {
-            if (followerList.contains(user))  {
+            if (isFollower(user))  {
                 return;
             }
             followerList.add(user);
