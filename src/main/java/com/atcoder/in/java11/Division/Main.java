@@ -93,6 +93,8 @@ public class Main {
     public class HappinessMap {
         public Map<String, Integer> happinessMap;
 
+        public static final String COMMA = ",";
+
         public HappinessMap(int empCount, Scanner scan) {
             happinessMap = new HashMap<>();
             for (int i = 1; i < empCount; i++) {
@@ -109,8 +111,7 @@ public class Main {
                     continue;
                 }
 
-                // TODO 10人だとバグる
-                int afterEmpNo = Character.getNumericValue(entry.getKey().toString().charAt(1));
+                int afterEmpNo = getAfterEmpNoByMapKey(entry.getKey().toString());
 
                 if (!division1.hasEmp(afterEmpNo) || !division1.hasNegative(afterEmpNo, this)) {
                     continue;
@@ -129,9 +130,13 @@ public class Main {
 
         public String createKey(int empNo1, int empNo2) {
             if (empNo1 < empNo2) {
-                return empNo1 + "" + empNo2;
+                return empNo1 + COMMA + empNo2;
             }
-            return empNo2 + "" + empNo1;
+            return empNo2 + COMMA + empNo1;
+        }
+
+        public int getAfterEmpNoByMapKey(String mapKey) {
+            return toInt(mapKey.split(COMMA)[1]);
         }
 
         public boolean isNegative(int empNo1, int empNo2) {
