@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
@@ -18,17 +17,12 @@ public class Main {
 
        int resultCount = 0;
        for (String key : keys) {
-           System.out.println(key + "：" + s.matches(key));
            if (s.matches(key)) {
                resultCount++;
            }
        }
 
        System.out.println(resultCount);
-    }
-
-    public static int toInt(final String a) {
-        return Integer.parseInt(a);
     }
 
     public static List<Character> getChars(final String S) {
@@ -63,6 +57,7 @@ public class Main {
         if (s.length() < 3) {
             return keyList;
         }
+
         // 3文字
         for (char ch: chars) {
             for (char ch2: chars) {
