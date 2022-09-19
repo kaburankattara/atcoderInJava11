@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
 //       Scanner scan = new Scanner(System.in);
-       Scanner scan = new Scanner(new File("src/main/java/com/atcoder/in/java11/RectangleDetection/input3.txt"));
+       Scanner scan = new Scanner(new File("src/main/java/com/atcoder/in/java11/RectangleDetection/input2.txt"));
 
         Main main = new Main();
         S s = main.getS(scan);
@@ -72,8 +72,6 @@ public class Main {
                 if (stringList.get(b).contains("#")) {
                     break;
                 }
-
-                b--;
             }
 
             return ++b;
