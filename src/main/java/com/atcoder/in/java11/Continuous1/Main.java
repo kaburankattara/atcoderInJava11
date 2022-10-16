@@ -1,6 +1,5 @@
 package com.atcoder.in.java11.Continuous1;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-//       Scanner scan = new Scanner(System.in);
-       Scanner scan = new Scanner(new File("src/main/java/com/atcoder/in/java11/Continuous1/input1.txt"));
+       Scanner scan = new Scanner(System.in);
+//       Scanner scan = new Scanner(new File("src/main/java/com/atcoder/in/java11/Continuous1/input1.txt"));
        Main main = new Main();
        int T = toInt(scan.next());
 
@@ -49,36 +48,35 @@ public class Main {
         }
 
         public String check() {
-            // 2の?乗のパターンがある
-            int matchCount = 0;
-            int matchStart = 0;
-            int matchEnd = 0;
-            for (int i = 1, len = getTestPatterCount(); i <= len; i++) {
+            int len = getTestPatterCount() == 0 ? 1 : getTestPatterCount();
+            List<String> matchSList = new ArrayList<>();
+            pattern : for (int i = 0; i < len; i++) {
 
+                // パターンを生成
                 String testPattern = createTestPattern(i);
-                String settedS = setTestPatterToS(testPattern);
-                Pattern p = Pattern.compile("1{" + this.k + "}");
-                int a = 1 + this.k;
-                Pattern p2 = Pattern.compile("1{" + a + "}");
+                String settedS = setTestPatternToS(testPattern);
+                // 1の数がkと一致しないパターンはスキップ
+                if (getOneCount(settedS) != this.k) {
+                    continue;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("1{" + this.k + "}");
+                Pattern p = Pattern.compile(sb.toString());
                 Matcher matcher = p.matcher(settedS);
-                Matcher matcher2 = p2.matcher(settedS);
-//                System.out.println("【ケース：" + s + "】" + settedS);
-                if (matcher.find() && !matcher2.find()
-                        && (matchStart != matcher.start() || matchEnd != matcher.end())) {
-                    matchCount++;
-                    matchStart = matcher.start();
-                    matchEnd = matcher.end();
+                if (matcher.find()) {
+                    matchSList.add(settedS);
                 }
 
                 // OKパターンが2回以上出たらNoにする
-                if (matchCount > 1) {
+                if (matchSList.size() > 1) {
                     return "No";
                 }
             }
 
             // OKが1つで全パターンのテストが終わればYes
             // 全てNGの場合はNoにする
-            return matchCount == 1 ? "Yes" : "No";
+            return matchSList.size() == 1 ? "Yes" : "No";
         }
 
         private int findQuestionCount() {
@@ -94,6 +92,11 @@ public class Main {
 
         private int getTestPatterCount() {
             int res = 1;
+
+            if (qCount == 0) {
+                return 0;
+            }
+
             for (int i = 0; i < qCount; i++) {
                 res = res * 2;
             }
@@ -111,14 +114,14 @@ public class Main {
             }
 
             // 生成したパターンで桁数が足らない場合があるため、桁埋めする
-            for(int i = testPattern.length() - 1; i < qCount; i++) {
+            for(int i = testPattern.length(); i < qCount; i++) {
                 sb.append('0');
             }
 
             return sb.toString();
         }
 
-        private String setTestPatterToS(String testPattern) {
+        private String setTestPatternToS(String testPattern) {
             int qi = 0;
 
             StringBuilder sb = new StringBuilder();
@@ -133,6 +136,12 @@ public class Main {
             }
 
             return sb.toString();
+        }
+
+        private int getOneCount(String str) {
+            return (int)str.chars()
+                    .filter(c -> c == '1')
+                    .count();
         }
     }
 
