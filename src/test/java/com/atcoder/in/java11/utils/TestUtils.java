@@ -7,7 +7,7 @@ public class TestUtils {
     private StandardInputSnatcher in = new StandardInputSnatcher();
 
     public static Object execPrivateMethod(Object target, String execMethodName) {
-        return execPrivateMethod(target, execMethodName);
+        return execPrivateMethod(target, execMethodName, null, null);
     }
 
     public static Object execPrivateMethod(Object target, String execMethodName, Class[] parameterTypes, Object[] parameters) {
