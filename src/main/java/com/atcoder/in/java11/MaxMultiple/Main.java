@@ -23,7 +23,7 @@ public class Main {
         }
 
         long[][][] dp = new long[n + 1][k + 1][d];
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n + 1; i++) {
             for (int j = 0; j < k + 1; j++) {
                 for (int l = 0; l < d; l++) {
                     dp[i][j][l] = -1;
