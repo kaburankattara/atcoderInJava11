@@ -23,7 +23,7 @@ public class Main {
 
         long[] dp = new long[n];
         for (int i = 0; i < n; i++) {
-            dp[i] = 100000;
+            dp[i] = Long.MAX_VALUE;
         }
 
         dp[0] = 0;
